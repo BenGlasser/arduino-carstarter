@@ -141,29 +141,15 @@ void readId()
    uint8_t uidLength;                        // Length of the UID (4 or 7 bytes depending on ISO14443A card type)
    
    int numBytes = EEPROM.read(addr);
-   
+   addr = addr + 1;
    for (int i = 0; i < numBytes; i++)
    {
-     
+     uid[i] = addr + i;
    }
-   String id = getUidString(addr+1, EEPROM.read(addr));
-   Serial.println(id) 
-//  int address = 0;
-//  while (address < 512) 
-//  {
-//    // read a byte from the current address of the EEPROM
-//    value = EEPROM.read(address);
-//    
-//    Serial.print(address);
-//    Serial.print("\t");
-//    Serial.print(value, DEC);
-//    Serial.println();
-//    
-//    // advance to the next address of the EEPROM
-//    address = address + 1;
-    
-  }
+   String id = getUidString(uid, numBytes); 
+   Serial.println(id);
 }
+
 void clearMem()
 {
   int address = 0;
@@ -176,7 +162,7 @@ void clearMem()
 void writeId(const uint8_t *data, const uint32_t numBytes)
 {
   EEPROM.write(addr, numBytes);
-   addr = addr + 1;
+  addr = addr + 1;
   for (int i = 0; i < numBytes; i++)
   {
     EEPROM.write(addr, data[i]);
